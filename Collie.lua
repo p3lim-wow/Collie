@@ -23,23 +23,28 @@ Search:SetScript('OnTextChanged', function(self)
 end)
 
 local mounts = {}
-for index = 1, GetNumCompanions('MOUNT') do
-	local id, name, _, _, _, flag = GetCompanionInfo('MOUNT', index)
-	if(flag == 12) then
-		mounts[index] = 'swimming'
-	elseif(flag == 7 or flag == 15) then
-		mounts[index] = 'flying'
-	elseif(flag == 29) then
-		mounts[index] = 'ground'
-	elseif(flag == 31) then
-		mounts[index] = 'combined'
-	end
+local function BuildMounts()
+	for index = 1, GetNumCompanions('MOUNT') do
+		local id, name, _, _, _, flag = GetCompanionInfo('MOUNT', index)
+		if(flag == 12) then
+			mounts[index] = 'swimming'
+		elseif(flag == 7 or flag == 15) then
+			mounts[index] = 'flying'
+		elseif(flag == 29) then
+			mounts[index] = 'ground'
+		elseif(flag == 31) then
+			mounts[index] = 'combined'
+		end
 
-	-- exceptions
-	if(id == 34187) then
-		mounts[index] = 'swimming'
+		-- exceptions
+		if(id == 34187) then
+			mounts[index] = 'swimming'
+		end
 	end
 end
+
+MountJournal:HookScript('OnEvent', BuildMounts)
+BuildMounts()
 
 function MountJournal_UpdateMountList()
 	local scroll = MountJournal.ListScrollFrame
