@@ -1,7 +1,22 @@
 local filter = ''
 local filterTable = {}
 
-local function Update()
+local Search = CreateFrame('EditBox', 'MountSearch', MountJournal, 'SearchBoxTemplate')
+Search:SetSize(145, 20)
+Search:SetPoint('LEFT', MountJournal.MountCount, 'RIGHT', 15, 0)
+Search:SetMaxLetters(40)
+Search:SetScript('OnTextChanged', function(self)
+	local text = self:GetText()
+	if(text == SEARCH) then
+		filter = ''
+	else
+		filter = text
+	end
+
+	MountJournal_UpdateMountList()
+end)
+
+function MountJournal_UpdateMountList()
 	local scroll = MountJournal.ListScrollFrame
 	local offset = HybridScrollFrame_GetOffset(scroll)
 	local mounts = GetNumCompanions('MOUNT')
@@ -77,28 +92,4 @@ local function Update()
 	MountJournal.MountCount.Count:SetText(mounts)
 end
 
-local function OnTextChanged(self)
-	local text = self:GetText()
-	if(text == SEARCH) then
-		filter = ''
-	else
-		filter = text
-	end
-
-	Update()
-end
-
-local Handler = CreateFrame('Frame')
-Handler:RegisterEvent('ADDON_LOADED')
-Handler:SetScript('OnEvent', function(self, event, name)
-	if(name == 'Blizzard_PetJournal') then
-		local Search = CreateFrame('EditBox', 'MountSearch', MountJournal, 'SearchBoxTemplate')
-		Search:SetSize(145, 20)
-		Search:SetPoint('LEFT', MountJournal.MountCount, 'RIGHT', 15, 0)
-		Search:SetMaxLetters(40)
-		Search:SetScript('OnTextChanged', OnTextChanged)
-
-		MountJournal.ListScrollFrame.update = Update
-		MountJournal_UpdateMountList = Update
-	end
-end)
+MountJournal.ListScrollFrame.update = MountJournal_UpdateMountList

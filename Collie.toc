@@ -3,5 +3,7 @@
 ## Version: Alpha
 ## Title: Collie
 ## Notes: Mount list search function
+## LoadOnDemand: 1
+## LoadWith: Blizzard_PetJournal
 
 Collie.lua
