@@ -51,16 +51,13 @@ function MountJournal_UpdateMountList()
 	local offset = HybridScrollFrame_GetOffset(scroll)
 	local total = GetNumCompanions('MOUNT')
 
-	if(UnitLevel('player') < 20 or total < 1) then
-		scroll:Hide()
+	local lowbie = UnitLevel('player') < 20
+	if(lowbie or total < 1) then
 		MountJournal.MountDisplay.NoMounts:Show()
 		MountJournal.selectedSpellID = 0
 		MountJournal_UpdateMountDisplay()
-		MountJournal.MountCount:SetText(0)
 		MountJournal.MountButton:SetEnabled(false)
-		return
 	else
-		scroll:Show()
 		MountJournal.MountDisplay.NoMounts:Hide()
 		MountJournal.MountButton:SetEnabled(true)
 	end
@@ -102,11 +99,11 @@ function MountJournal_UpdateMountList()
 				button.selectedTexture:Hide()
 			end
 
-			button:SetEnabled(true)
+			button:SetEnabled(not lowbie)
+			button.DragButton:SetEnabled(not lowbie)
 
-			button.DragButton:SetEnabled(true)
 			button.additionalText = nil
-			button.icon:SetDesaturated(false)
+			button.icon:SetDesaturated(lowbie)
 			button.icon:SetAlpha(1)
 			button.name:SetFontObject('GameFontNormal')
 
