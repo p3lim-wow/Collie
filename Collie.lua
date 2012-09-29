@@ -5,6 +5,7 @@ local filterFlags = {
 	['flying'] = true,
 	['ground'] = true,
 	['combined'] = true,
+	['unknown'] = true,
 }
 
 local Search = CreateFrame('EditBox', 'MountSearch', MountJournal, 'SearchBoxTemplate')
@@ -23,7 +24,9 @@ Search:SetScript('OnTextChanged', function(self)
 end)
 
 local mounts = {}
-local function BuildMounts()
+local function BuildMounts(self, event)
+	if(event and event ~= 'COMPANION_LEARNED') then return end
+
 	for index = 1, GetNumCompanions('MOUNT') do
 		local id, name, _, _, _, flag = GetCompanionInfo('MOUNT', index)
 		if(flag == 12) then
@@ -34,6 +37,8 @@ local function BuildMounts()
 			mounts[index] = 'ground'
 		elseif(flag == 31) then
 			mounts[index] = 'combined'
+		else
+			mounts[index] = 'unknown'
 		end
 
 		-- exceptions
@@ -161,6 +166,15 @@ local function CreateDropDown()
 	info.func = function(...)
 		local _, _, _, enabled = ...
 		filterFlags.swimming = enabled
+		MountJournal_UpdateMountList()
+	end
+	UIDropDownMenu_AddButton(info)
+
+	info.text = 'Unknown'
+	info.checked = filterFlags.unknown
+	info.func = function(...)
+		local _, _, _, enabled = ...
+		filterFlags.unknown = enabled
 		MountJournal_UpdateMountList()
 	end
 	UIDropDownMenu_AddButton(info)
