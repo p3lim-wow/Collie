@@ -25,8 +25,6 @@ end)
 
 local mounts = {}
 local function BuildMounts(self, event)
-	if(event and event ~= 'COMPANION_LEARNED') then return end
-
 	for index = 1, GetNumCompanions('MOUNT') do
 		local id, name, _, _, _, flag = GetCompanionInfo('MOUNT', index)
 		if(flag == 12) then
@@ -71,7 +69,7 @@ function MountJournal_UpdateMountList()
 
 	for index = 1, total do
 		local id, name, spell, icon, active, flag = GetCompanionInfo('MOUNT', index)
-		if(name:lower():find(filter) and filterFlags[mounts[index]]) then
+		if(name and name:lower():find(filter) and filterFlags[mounts[index]]) then
 			table.insert(filterTable, index)
 		end
 	end
