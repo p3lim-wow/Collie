@@ -5,7 +5,6 @@ local filterFlags = {
 	['flying'] = true,
 	['ground'] = true,
 	['combined'] = true,
-	['unknown'] = true,
 }
 
 local Search = CreateFrame('EditBox', 'MountSearch', MountJournal, 'SearchBoxTemplate')
@@ -33,10 +32,10 @@ local function BuildMounts(self, event)
 			mounts[index] = 'flying'
 		elseif(flag == 29) then
 			mounts[index] = 'ground'
-		elseif(flag == 31) then
+		elseif(flag == 31 or flag == 23) then
 			mounts[index] = 'combined'
 		else
-			mounts[index] = 'unknown'
+			print(string.format('|cff33ff99Collie:|r [%s] is not added, let the author of this addon know!', name))
 		end
 
 		-- exceptions
@@ -164,15 +163,6 @@ local function CreateDropDown()
 	info.func = function(...)
 		local _, _, _, enabled = ...
 		filterFlags.swimming = enabled
-		MountJournal_UpdateMountList()
-	end
-	UIDropDownMenu_AddButton(info)
-
-	info.text = 'Unknown'
-	info.checked = filterFlags.unknown
-	info.func = function(...)
-		local _, _, _, enabled = ...
-		filterFlags.unknown = enabled
 		MountJournal_UpdateMountList()
 	end
 	UIDropDownMenu_AddButton(info)
